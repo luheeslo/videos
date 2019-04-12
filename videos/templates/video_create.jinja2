@@ -1,0 +1,12 @@
+{% extends "base.jinja2" %}
+
+
+{% block content %}
+    <h1>Add video</h1>
+    <div class="container">
+       <p>{{ form | safe }}</p>
+      <script charset="utf-8">
+        deform.load();
+     </script>
+    </div> 
+{% endblock %}
