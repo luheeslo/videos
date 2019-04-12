@@ -1,19 +1,10 @@
 import colander
 import deform.widget
 
-from pyramid.httpexceptions import HTTPFound
 from pyramid.view import view_config
 import pyramid.httpexceptions as exc
 
-
-videos = [
-        {'title': 'Radiohead Lucky Live', 'theme': 'Music', 'uid': 100,
-         'likes': 0, 'dislikes': 0},
-        {'title': 'DOIS ANOS DE METEORO #meteoro.doc ', 
-         'theme': 'Entertainment', 'uid': 101, 'likes': 0, 'dislikes': 0},
-        {'title': 'Example ', 'theme': 'Example', 'uid': 102, 
-         'likes': 0, 'dislikes': 0},
-]
+from videos.queries import create_video, get_video, set_video_like
 
 
 # @view_config(route_name='home', renderer='../templates/mytemplate.jinja2')
@@ -44,7 +35,8 @@ class VideoViews(object):
 
     @view_config(route_name='index', renderer='../templates/index.jinja2')
     def index(self):
-        return dict(videos=videos)
+        cursor = self.request.db['videos'].find({})
+        return dict(videos=[video for video in cursor])
 
     @view_config(route_name='video_create', renderer='../templates/video_create.jinja2')
     def video_create(self):
@@ -57,32 +49,40 @@ class VideoViews(object):
             except deform.ValidationFailure as e:
                 return dict(form=e.render())
 
-            last_uid = int(sorted(videos, key=lambda i: i['uid'])[-1]['uid'])
-            new_uid = str(last_uid + 1)
-            videos.append(dict(
-                uid=new_uid, title=appstruct['title'],
-                theme=appstruct['theme'], likes=0, deslikes=0,
-            ))
+            create_video(self.request.db, title=appstruct['title'],
+                         theme=appstruct['theme'])
 
             url = self.request.route_url('index')
-            return HTTPFound(url)
+            return exc.HTTPFound(url)
 
         return dict(form=form)
 
     @view_config(route_name='like', renderer='json')
     def like(self):
+        uid = self.request.json_body['uid']
         if self.request.method == 'POST':
-            v = next(video for video in videos if video['uid'] == self.request.json_body['uid'])
-            v['likes'] += 1
-            return {'likes': v['likes']}
+            return {'likes': set_video_like(self.request.db, uid)}
         else:
             raise exc.HTTPForbidden(403)
 
     @view_config(route_name='dislike', renderer='json')
     def dislike(self):
+        uid = self.request.json_body['uid']
         if self.request.method == 'POST':
-            v = next(video for video in videos if video['uid'] == self.request.json_body['uid'])
-            v['dislikes'] += 1
-            return {'dislikes': v['dislikes']}
+            return {'dislikes': set_video_like(self.request.db, uid,
+                                               dislike=True)}
         else:
             raise exc.HTTPForbidden(403)
+
+    @view_config(route_name='themes', renderer='../templates/themes.jinja2')
+    def themes(self):
+        cursor = self.request.db['videos'].find({})
+        themes = {}
+        for v in cursor:
+            if not themes.get(v['theme']):
+                themes[v['theme']] = {'thumbs_up': 0, 'thumbs_down': 0}
+            themes[v['theme']]['thumbs_up'] += v['likes']
+            themes[v['theme']]['thumbs_down'] += v['dislikes']
+        return dict(themes=sorted(themes.items(),
+                                  key=lambda t: t[1]['thumbs_up'] - (t[1]['thumbs_down']/2),
+                                  reverse=True))

@@ -1,0 +1,9 @@
+{% extends "base.jinja2" %}
+
+{% block content %}
+    <ul class="list-group">
+        {% for theme in themes %}
+        <li class="list-group-item">{{ theme[0] }} {{ theme[1] }}</li>
+        {% endfor%}
+    </ul>
+{% endblock %}

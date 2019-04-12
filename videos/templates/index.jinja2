@@ -13,13 +13,13 @@
             <th>{{ video['title'] }}</th>
             <th>{{ video['theme'] }}</th>
             <th>
-                <a href="#" onclick="like({{ video['uid'] }})">
+                <a href="#" onclick="like('{{ video['uid'] }}')">
                     <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
                     <span id="like{{ video['uid'] }}" class="badge">{{ video['likes'] }}
                 </a>
             </th>
             <th>
-                <a href="#" onclick="dislike({{ video['uid'] }})">
+                <a href="#" onclick="dislike('{{ video['uid'] }}')">
                     <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
                     <span id="dislike{{ video['uid'] }}" class="badge">{{ video['dislikes'] }}
                 </a>

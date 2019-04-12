@@ -2,9 +2,6 @@ mongodb:
   image: mongo
   ports:
     - "27017:27017"
-  environment:
-    MONGO_INITDB_ROOT_USERNAME: root
-    MONGO_INITDB_ROOT_PASSWORD: 123456
 
 videos:
   image: videos
@@ -14,6 +11,7 @@ videos:
     - mongodb:mongo
   environment:
     - DATABASE_URL=mongodb://root:123456@mongo:27017/videos
+  command: env/bin/pserve development.ini --reload
 
 check_mongodb_up:
   image: mongo

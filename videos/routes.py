@@ -5,4 +5,5 @@ def includeme(config):
     config.add_route('video_create', '/create')
     config.add_route('like', '/like')
     config.add_route('dislike', '/dislike')
+    config.add_route('themes', '/themes')
     config.add_static_view('deform_static', 'deform:static/')
