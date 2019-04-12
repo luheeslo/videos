@@ -1,0 +1,23 @@
+mongodb:
+  image: mongo
+  ports:
+    - "27017:27017"
+  environment:
+    MONGO_INITDB_ROOT_USERNAME: root
+    MONGO_INITDB_ROOT_PASSWORD: 123456
+
+videos:
+  image: videos
+  ports:
+    - "8000:6543"
+  links:
+    - mongodb:mongo
+  environment:
+    - DATABASE_URL=mongodb://root:123456@mongo:27017/videos
+
+check_mongodb_up:
+  image: mongo
+  links:
+    - mongodb
+  command:
+    bash -c "echo exit | mongo mongodb:27017"

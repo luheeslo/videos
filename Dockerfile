@@ -4,13 +4,8 @@ RUN adduser -D videos
 
 WORKDIR /home/videos
 
-COPY development.ini development.ini
-COPY production.ini production.ini
-COPY pytest.ini pytest.ini
-COPY setup.py setup.py
-COPY videos.egg-info videos.egg-info
-COPY videos/ videos/
-COPY README.txt README.txt
+RUN apk update && apk add git
+RUN git clone https://github.com/luheeslo/videos .
 RUN python -m venv env
 RUN env/bin/pip install --upgrade pip setuptools
 RUN env/bin/pip install -e ".[testing]"
