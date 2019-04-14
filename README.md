@@ -4,7 +4,7 @@ A working Pyramid project that uses Mongo for the database based in https://gist
 
 ## Setup
 
-Install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/)
+Install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/).
 
 ## First Build
 
@@ -18,6 +18,8 @@ This will build the base container, and is only required the first time the proj
 
     make run_dev_server
     
+Visit localhost:8000 to interact with the app.
+
 ## Stopping Dev Server
 
     make stop_dev_server
