@@ -11,7 +11,6 @@ videos:
     - mongodb:mongo
   environment:
     - DATABASE_URI=mongodb://mongo:27017/videos
-  command: env/bin/pserve development.ini --reload
 
 check_mongodb_up:
   image: mongo
@@ -30,12 +29,12 @@ check_mongodb_test_up:
   links:
     - mongodb_test
   command:
-    bash -c "echo exit | mongo mongodb_test:27018"
+    bash -c "echo exit | mongo mongodb_test:27017"
 
 videos_test:
   image: videos
   links:
     - mongodb_test:mongo
   environment:
-    - DATABASE_URI_TEST=mongodb://mongo:27018/videos
-  command: pytest --cov --cov-report=term-missing
+    - DATABASE_URI_TEST=mongodb://mongo:27017/videos
+  command: ["test"]
