@@ -33,11 +33,3 @@ run_tests:
 
 stop_mongodb_test:
 	docker-compose stop	-t 0 mongodb_test
-
-
-run_all: run_tests
-	run_dev_server
-
-
-
-
