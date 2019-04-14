@@ -10,7 +10,7 @@ videos:
   links:
     - mongodb:mongo
   environment:
-    - DATABASE_URL=mongodb://root:123456@mongo:27017/videos
+    - DATABASE_URI=mongodb://mongo:27017/videos
   command: env/bin/pserve development.ini --reload
 
 check_mongodb_up:
@@ -19,3 +19,23 @@ check_mongodb_up:
     - mongodb
   command:
     bash -c "echo exit | mongo mongodb:27017"
+
+mongodb_test:
+  image: mongo
+  ports:
+    - "27018:27017"
+
+check_mongodb_test_up:
+  image: mongo
+  links:
+    - mongodb_test
+  command:
+    bash -c "echo exit | mongo mongodb_test:27018"
+
+videos_test:
+  image: videos
+  links:
+    - mongodb_test:mongo
+  environment:
+    - DATABASE_URI_TEST=mongodb://mongo:27018/videos
+  command: pytest --cov --cov-report=term-missing
