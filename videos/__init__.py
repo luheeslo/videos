@@ -13,7 +13,11 @@ def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
     with Configurator(settings=settings) as config:
-        db_url = urlparse(os.path.expandvars(settings['mongo_uri']))
+        if settings.get('testing'):
+            db_url = urlparse(settings['mongo_uri'])
+        else:
+            db_url = urlparse(os.path.expandvars(settings['mongo_uri']))
+
         config.registry.db = MongoClient(
             host=db_url.hostname,
             port=db_url.port

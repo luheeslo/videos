@@ -1,5 +1,4 @@
 import os
-from pprint import pprint
 
 import unittest
 try:
@@ -58,7 +57,7 @@ class VideoViewTest(unittest.TestCase):
 
         self.v1 = {'title': 'Radiohead Lucky Live', 'theme': 'Music',
                    'likes': 2, 'dislikes': 0}
-        self.v2 = {'title': 'Video1', 'theme': 'Music', 'likes': 6, 
+        self.v2 = {'title': 'Video1', 'theme': 'Music', 'likes': 6,
                    'dislikes': 10}
         self.v3 = {'title': 'Video3', 'theme': 'Anime', 'likes': 0,
                    'dislikes': 0}
@@ -85,7 +84,7 @@ class VideoViewTest(unittest.TestCase):
 
     def test_video_create(self):
         from videos import main
-        app = main({}, mongo_uri=self.database_uri)
+        app = main({}, mongo_uri=self.database_uri, testing=True)
         from webtest import TestApp
         self.testapp = TestApp(app)
         self.v1['submit'] = True
