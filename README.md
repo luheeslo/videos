@@ -10,11 +10,15 @@ Install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://
 
 From a terminal:
 
+    git clone https://github.com/luheeslo/videos
+    cd videos/
     make build_app
 
 This will build the base container, and is only required the first time the project is run.
 
 ## Running Dev Server
+
+At the project root, run:
 
     make run_dev_server
     
