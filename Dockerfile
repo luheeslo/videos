@@ -10,7 +10,6 @@ RUN python -m venv env
 RUN env/bin/pip install --upgrade pip setuptools
 RUN env/bin/pip install -e ".[testing]"
 
-COPY boot.sh ./
 RUN chmod +x boot.sh
 
 RUN chown -R videos:videos ./
